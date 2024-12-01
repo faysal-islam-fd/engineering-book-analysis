@@ -1,122 +1,44 @@
-// import React, { useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import { Book } from '../types';
+
+import { Book } from '@/types';
+import axios from '../config/axios';
 import { ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const books = [
-    {
-      id:1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      description: "A story of decadence and excess, Gatsby explores the darker aspects of the American Dream.",
-      isbn: "978-0743273565",
-      publisher: "Scribner",
-      publishDate: "1925-04-10",
-      pages: 180,
-      price: 15.99,
-      coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e",
-      amazonLink: "https://www.amazon.com/Great-Gatsby-F-Scott-Fitzgerald/dp/0743273567"
-    },
-    {id:2,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      description: "The unforgettable novel of a childhood in a sleepy Southern town and the crisis of conscience that rocked it.",
-      isbn: "978-0446310789",
-      publisher: "Grand Central Publishing",
-      publishDate: "1960-07-11",
-      pages: 281,
-      price: 14.99,
-      coverImage: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c",
-      amazonLink: "https://www.amazon.com/Kill-Mockingbird-Harper-Lee/dp/0446310786"
-    },
-    { id:3,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      description: "A story of decadence and excess, Gatsby explores the darker aspects of the American Dream.",
-      isbn: "978-0743273565",
-      publisher: "Scribner",
-      publishDate: "1925-04-10",
-      pages: 180,
-      price: 15.99,
-      coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e",
-      amazonLink: "https://www.amazon.com/Great-Gatsby-F-Scott-Fitzgerald/dp/0743273567"
-    },
-    { id:4,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      description: "A story of decadence and excess, Gatsby explores the darker aspects of the American Dream.",
-      isbn: "978-0743273565",
-      publisher: "Scribner",
-      publishDate: "1925-04-10",
-      pages: 180,
-      price: 15.99,
-      coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e",
-      amazonLink: "https://www.amazon.com/Great-Gatsby-F-Scott-Fitzgerald/dp/0743273567"
-    },
-    { id:5,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      description: "A story of decadence and excess, Gatsby explores the darker aspects of the American Dream.",
-      isbn: "978-0743273565",
-      publisher: "Scribner",
-      publishDate: "1925-04-10",
-      pages: 180,
-      price: 15.99,
-      coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e",
-      amazonLink: "https://www.amazon.com/Great-Gatsby-F-Scott-Fitzgerald/dp/0743273567"
-    },
-    { id:6,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      description: "A story of decadence and excess, Gatsby explores the darker aspects of the American Dream.",
-      isbn: "978-0743273565",
-      publisher: "Scribner",
-      publishDate: "1925-04-10",
-      pages: 180,
-      price: 15.99,
-      coverImage: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e",
-      amazonLink: "https://www.amazon.com/Great-Gatsby-F-Scott-Fitzgerald/dp/0743273567"
-    },
-  ];
-  // console.log(id);
-  
-  const book = books.find((bk) => Number(bk.id) == Number(id))
+ 
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // const [book, setBook] = useState<Book | null>(null);
-  // const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/books/${id}`);
+        setBook(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching book:', error);
+        setLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchBook = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:3000/api/books/${id}`);
-  //       setBook(response.data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error('Error fetching book:', error);
-  //       setLoading(false);
-  //     }
-  //   };
+    fetchBook();
+  }, [id]);
 
-  //   fetchBook();
-  // }, [id]);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-64">
-  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-  //     </div>
-  //   );
-  // }
-
-  // if (!book) {
-  //   return (
-  //     <div className="text-center text-gray-600">Book not found</div>
-  //   );
-  // }
+  if (!book) {
+    return (
+      <div className="text-center text-gray-600">Book not found</div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">

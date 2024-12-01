@@ -11,3 +11,16 @@ export interface Book {
   coverImage: string;
   amazonLink: string;
 }
+export interface Category {
+  _id: string;
+  name: string;
+  description: string;
+}
+
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+}

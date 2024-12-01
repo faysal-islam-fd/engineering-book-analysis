@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, LogIn, UserPlus, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from './LoadingSpinner';
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout,user ,isUserLoading} = useAuth();
 
+  
+  
   return (
     <nav className="bg-white shadow-lg">
       <div className="container mx-auto px-4">
@@ -34,13 +37,21 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <button
+              <div className='flex gap-2'>
+                {
+                  isUserLoading ?
+                  <LoadingSpinner />
+                  :
+                  (user?.role === 'admin' ? <span>Hi, Admin</span> :  `Hi, ${user?.name}`)
+                }
+                <button
                 onClick={logout}
                 className="flex items-center space-x-1 text-gray-600 hover:text-blue-600"
               >
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
               </button>
+              </div>
             )}
           </div>
         </div>
